@@ -1,0 +1,6 @@
+[SETTINGS]
+DIR = /home/bacup/
+Predeclared_Files = no
+File_names = backup,
+             nextbackup,
+             nextnextbackup
