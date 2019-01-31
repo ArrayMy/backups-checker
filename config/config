@@ -3,4 +3,5 @@ DIR = /home/bacup/
 Predeclared_Files = yes
 Format = dat,backup,rar,zip,7z
 File_names = backup,nextbackup,nextnextbackup
+Date = Y-m-d
 
