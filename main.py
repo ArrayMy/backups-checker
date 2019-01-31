@@ -5,26 +5,33 @@ def read_config():
     configFilePath = r'config'
     ConfigParser.read(configFilePath)
     Format = ConfigParser.get('SETTINGS','Format')
+    Date = ConfigParser.get('SETTINGS','Date')
     DIR = ConfigParser.get('SETTINGS','DIR')
     file = ConfigParser.get('SETTINGS','Predeclared_Files')
+    set_date(Date)
     file_names = 'NULL'
     if file == 'yes':
         file_names = ConfigParser.get('SETTINGS','File_names')
         last_backup(DIR,file_names,Format,True)
     elif file == 'no':
-        last_backup(DIR,file_names,Format)   
-        
+        last_backup(DIR,file_names,Format)
+
+def set_date(Date):
+  print(Date)
+  if Date == 'Y-m-d':
+    Date_pattern = '%{YEAR:year}-%{MONTHNUM:month}-%{MONTHDAY:day}'
+    
 def last_backup(DIR,file_names,Format,file=False):
     if file==True:
-        print ('dir_from_input:',DIR)
+        print ('DIR:',DIR)
         file_names = file_names.split(",")
         Format = Format.split(",")
-        print(file_names)
         for x in file_names:
           for y in Format:
-            print(x+"."+y)
-        '''fnames = glob.glob(file_names[0]+"*"+Format[0])
-        print(fnames[0])'''
+            if glob.glob(x+"*"+y): 
+              print("Easy!")
+            else:
+              print("File: "+x+"."+y+" is not exist!")
     elif file==False:
         print ('file_name_from_cfg:',DIR)
         print (file_names,Format)
