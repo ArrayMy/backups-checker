@@ -16,9 +16,15 @@ def read_config():
         
 def last_backup(DIR,file_names,Format,file=False):
     if file==True:
-        fnames = glob.glob("/*.txt")
         print ('dir_from_input:',DIR)
-        print (file_names,Format)
+        file_names = file_names.split(",")
+        Format = Format.split(",")
+        print(file_names)
+        for x in file_names:
+          for y in Format:
+            print(x+"."+y)
+        '''fnames = glob.glob(file_names[0]+"*"+Format[0])
+        print(fnames[0])'''
     elif file==False:
         print ('file_name_from_cfg:',DIR)
         print (file_names,Format)
