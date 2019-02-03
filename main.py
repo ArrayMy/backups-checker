@@ -15,11 +15,14 @@ def read_config():
         last_backup(DIR,file_names,Format,True)
     elif file == 'no':
         last_backup(DIR,file_names,Format)
-
+'''
+set_date need detected Y = Year, m = Mounth, d = Day, S = sec, M = minutes, H = Hours
+'''
 def set_date(Date):
-  print(Date)
   if Date == 'Y-m-d':
     Date_pattern = '%{YEAR:year}-%{MONTHNUM:month}-%{MONTHDAY:day}'
+     
+    
     
 def last_backup(DIR,file_names,Format,file=False):
     if file==True:
