@@ -15,38 +15,48 @@ def progress(count, total, status=''):
     bar = '=' * filled_len + '-' * (bar_len - filled_len)
 
     sys.stdout.write('[%s] %s%s ...%s\r' % (bar, percents, '%', status))
-    print('\n')
     sys.stdout.flush() 
 
 def find_date(File,full_date=False):
+    Some = True
     progress(99,100,'Finding last backup')
-    time.sleep(1)
-    if(full_date == False or full_date == True):
-      File_format = File[0].split(".")[0]
-      Year = File_format.split("-")[1]
-      Month = File_format.split("-")[2]
-      Day = File_format.split("-")[3]
+    time.sleep(0.5)
+    File_format = File.split(".")[0]
+    try:
+      File_format.split("-")[1]
+    except:
+      Some = False
+    if (Some == True):
+      if(full_date == False or full_date == True):
+        Year = File_format.split("-")[1]
+        Month = File_format.split("-")[2]
+        Day = File_format.split("-")[3]
+      else:
+        print("Check Date in Config!")
+      if(full_date == True):
+        File_format2 = File.split(".")[0]
+        File_format2 = File_format2.split("-")[4]
+        Hour = File_format2.split(":")[0]
+        Minutes = File_format2.split(":")[1]
+        Seconds = File_format2.split(":")[2]
+      if(full_date == True):
+        print("Last backup in name ("+File+"): "+Year+"-"+Month+"-"+Day+" "+Hour+":"+Minutes+":"+Seconds)
+        print("Last modified ("+File+"): %s" % time.ctime(os.path.getmtime(File)))
+        print("Created ("+File+"): %s" % time.ctime(os.path.getctime(File)))
+      elif(full_date == False):
+        print("Last backup in name ("+File+"): "+Year+"-"+Month+"-"+Day)
+        print("Last modified ("+File+"): %s" % time.ctime(os.path.getmtime(File)))
+        print("Created ("+File+"): %s" % time.ctime(os.path.getctime(File)))
+    elif (Some == False):
+      print("Without date from name. Error in date name syntax.")
+      print("Last modified ("+File+"): %s" % time.ctime(os.path.getmtime(File)))
+      print("Created ("+File+"): %s" % time.ctime(os.path.getctime(File)))
     else:
-      print("Check Date in Config!")
-    if(full_date == True):
-      File_format2 = File[0].split(".")[0]
-      File_format2 = File_format2.split("-")[4]
-      Hour = File_format2.split(":")[0]
-      Minutes = File_format2.split(":")[1]
-      Seconds = File_format2.split(":")[2]
-    if(full_date == True):
-      print("Last backup in name ("+File[0].split("-")[0]+"."+File[0].split(".")[1]+"): "+Year+"-"+Month+"-"+Day+" "+Hour+":"+Minutes+":"+Seconds)
-      print("Last modified: %s" % time.ctime(os.path.getmtime(File[0])))
-      print("Created: %s" % time.ctime(os.path.getctime(File[0])))
-    elif(full_date == False):
-      print("Last backup in name("+File[0].split("-")[0]+"."+File[0].split(".")[1]+"): "+Year+"-"+Month+"-"+Day)
-      print("Last modified: %s" % time.ctime(os.path.getmtime(File[0])))
-      print("Created: %s" % time.ctime(os.path.getctime(File[0])))
-
+      print("This error is not defined. Please contact developer!")
 
 def read_config():
     progress(25,100,'Reading config')
-    time.sleep(1)
+    time.sleep(0.5)
     ConfigParser = configparser.RawConfigParser()   
     configFilePath = r'config'
     ConfigParser.read(configFilePath)
@@ -65,7 +75,7 @@ def read_config():
 '''set_date need detected Y = Year, m = Mounth, d = Day, S = sec, M = minutes, H = Hours'''
 def set_date(Date):
   progress(50,100,'Parsing date')
-  time.sleep(1)
+  time.sleep(0.5)
   global full_date
   Date_pattern = ["NULL","NULL","NULL","NULL","NULL","NULL"]
   num = 0
@@ -91,24 +101,20 @@ def set_date(Date):
 
 def last_backup(DIR,file_names,Format,file=False):
     progress(75,100,'Checking file names')
-    time.sleep(1)
+    time.sleep(0.5)
     if file==True:
         file_names = file_names.split(",")
         Format = Format.split(",")
         for x in file_names:
           for y in Format:
-            if glob.glob(x+"*"+y): 
+             for File in glob.glob(x+"*"+"."+y): 
               ''' Add DIR in GLOB'''
-              File = glob.glob(x+"*"+y)
               find_date(File,full_date)
-            else:
-              print("File: "+x+"(DATE)."+y+" is not exist!")
     elif file==False:
         Format = Format.split(",")
         for y in Format:
-          if glob.glob("*"+"."+y):   
-            File = glob.glob("*"+"."+y)
-            find_date(File,full_date)
-
+          for File in glob.glob("*"+"."+y):
+              find_date(File,full_date)
 if __name__ == '__main__':
     read_config()
+
