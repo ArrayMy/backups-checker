@@ -3,5 +3,5 @@ DIR = /home/bacup/
 Predeclared_Files = yes
 Format = dat,backup,rar,zip,7z
 File_names = backup,nextbackup,nextnextbackup
+#Y = Year/m = Month/d = Day/H = Hour/S = Second/M = Minute
 Date = Y-m-d
-
