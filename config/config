@@ -1,5 +1,6 @@
 [SETTINGS]
-DIR = /home/bacup/
+Log = Logs/
+DIR = backups/
 Predeclared_Files = yes
 Format = dat,backup,rar,zip,7z
 File_names = backup,nextbackup,nextnextbackup
