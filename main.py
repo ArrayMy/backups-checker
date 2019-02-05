@@ -3,10 +3,20 @@ import glob
 import datetime
 import sys
 import time
-from datetime import date
 import os.path, time
+from datetime import datetime
 
 full_date = False
+Time = datetime.now().strftime('%Y-%m-%d_%H:%M:%S')
+
+def log(DIR,Messeage):
+  global Time
+  DIR = DIR+Time+".log"
+  Log = open("Logs/test_log.log","w")
+  Log.write(Messeage)
+  Log.close()
+
+
 def progress(count, total, status=''):
     bar_len = 60
     filled_len = int(round(bar_len * count / float(total)))
@@ -19,8 +29,6 @@ def progress(count, total, status=''):
 
 def find_date(File,full_date=False):
     Some = True
-    progress(99,100,'Finding last backup')
-    time.sleep(0.5)
     File_format = File.split(".")[0]
     try:
       File_format.split("-")[1]
@@ -40,26 +48,32 @@ def find_date(File,full_date=False):
         Minutes = File_format2.split(":")[1]
         Seconds = File_format2.split(":")[2]
       if(full_date == True):
+        Messeage = "Last backup in name ("+File+"): "+Year+"-"+Month+"-"+Day+" "+Hour+":"+Minutes+":"+Seconds+"\n"+"Last modified ("+File+"): %s" % time.ctime(os.path.getmtime(File))+"\n"+"Created ("+File+"): %s" % time.ctime(os.path.getctime(File))+"\n"
         print("Last backup in name ("+File+"): "+Year+"-"+Month+"-"+Day+" "+Hour+":"+Minutes+":"+Seconds)
         print("Last modified ("+File+"): %s" % time.ctime(os.path.getmtime(File)))
-        print("Created ("+File+"): %s" % time.ctime(os.path.getctime(File)))
+        print("Created ("+File+"): %s" % time.ctime(os.path.getctime(File))+"\n")
       elif(full_date == False):
+        Messeage = "Last backup in name ("+File+"): "+Year+"-"+Month+"-"+Day+"\n"+"Last modified ("+File+"): %s" % time.ctime(os.path.getmtime(File))+"\n"+"Created ("+File+"): %s" % time.ctime(os.path.getctime(File))+"\n"
+        log(Log,Messeage)
         print("Last backup in name ("+File+"): "+Year+"-"+Month+"-"+Day)
         print("Last modified ("+File+"): %s" % time.ctime(os.path.getmtime(File)))
-        print("Created ("+File+"): %s" % time.ctime(os.path.getctime(File)))
+        print("Created ("+File+"): %s" % time.ctime(os.path.getctime(File))+"\n")
     elif (Some == False):
-      print("Without date from name. Error in date name syntax.")
+      Messeage = "Last modified ("+File+"): %s" % time.ctime(os.path.getmtime(File))+"\n"+"Created ("+File+"): %s" % time.ctime(os.path.getctime(File))+"\n"
+      log(Log,Messeage)
       print("Last modified ("+File+"): %s" % time.ctime(os.path.getmtime(File)))
-      print("Created ("+File+"): %s" % time.ctime(os.path.getctime(File)))
+      print("Created ("+File+"): %s" % time.ctime(os.path.getctime(File))+"\n")
     else:
       print("This error is not defined. Please contact developer!")
 
 def read_config():
+    global Log
     progress(25,100,'Reading config')
     time.sleep(0.5)
     ConfigParser = configparser.RawConfigParser()   
-    configFilePath = r'config'
+    configFilePath = r'config/config'
     ConfigParser.read(configFilePath)
+    Log = ConfigParser.get('SETTINGS','Log')
     Format = ConfigParser.get('SETTINGS','Format')
     Date = ConfigParser.get('SETTINGS','Date')
     DIR = ConfigParser.get('SETTINGS','DIR')
@@ -105,16 +119,21 @@ def last_backup(DIR,file_names,Format,file=False):
     if file==True:
         file_names = file_names.split(",")
         Format = Format.split(",")
+        progress(99,100,'Finding last backup')
+        time.sleep(0.5)
+        print(chr(27) + "[2J")
         for x in file_names:
           for y in Format:
-             for File in glob.glob(x+"*"+"."+y): 
+             for File in glob.glob(DIR+x+"*"+"."+y): 
               ''' Add DIR in GLOB'''
               find_date(File,full_date)
     elif file==False:
+        progress(99,100,'Finding last backup')
+        time.sleep(0.5)
+        print(chr(27) + "[2J")
         Format = Format.split(",")
         for y in Format:
-          for File in glob.glob("*"+"."+y):
+          for File in glob.glob(DIR+"*"+"."+y):
               find_date(File,full_date)
 if __name__ == '__main__':
     read_config()
-
