@@ -5,36 +5,29 @@ import sys
 import time
 import os.path, time
 from datetime import datetime
-
 full_date = False
 Time = datetime.now().strftime('%Y-%m-%d_%H:%M:%S')
-
 def log(DIR,Messeage):
   global Time
   DIR = DIR+Time+".log"
-  Log = open("Logs/test_log.log","w")
+  Log = open(DIR,"a")
   Log.write(Messeage)
   Log.close()
-
-
 def progress(count, total, status=''):
     bar_len = 60
     filled_len = int(round(bar_len * count / float(total)))
-
     percents = round(100.0 * count / float(total), 1)
     bar = '=' * filled_len + '-' * (bar_len - filled_len)
-
     sys.stdout.write('[%s] %s%s ...%s\r' % (bar, percents, '%', status))
     sys.stdout.flush() 
-
 def find_date(File,full_date=False):
-    Some = True
+    check = True
     File_format = File.split(".")[0]
     try:
       File_format.split("-")[1]
     except:
-      Some = False
-    if (Some == True):
+      check = False
+    if (check == True):
       if(full_date == False or full_date == True):
         Year = File_format.split("-")[1]
         Month = File_format.split("-")[2]
@@ -58,14 +51,13 @@ def find_date(File,full_date=False):
         print("Last backup in name ("+File+"): "+Year+"-"+Month+"-"+Day)
         print("Last modified ("+File+"): %s" % time.ctime(os.path.getmtime(File)))
         print("Created ("+File+"): %s" % time.ctime(os.path.getctime(File))+"\n")
-    elif (Some == False):
+    elif (check == False):
       Messeage = "Last modified ("+File+"): %s" % time.ctime(os.path.getmtime(File))+"\n"+"Created ("+File+"): %s" % time.ctime(os.path.getctime(File))+"\n"
       log(Log,Messeage)
       print("Last modified ("+File+"): %s" % time.ctime(os.path.getmtime(File)))
       print("Created ("+File+"): %s" % time.ctime(os.path.getctime(File))+"\n")
     else:
       print("This error is not defined. Please contact developer!")
-
 def read_config():
     global Log
     progress(25,100,'Reading config')
@@ -85,8 +77,6 @@ def read_config():
         last_backup(DIR,file_names,Format,True)
     elif file == 'no':
         last_backup(DIR,file_names,Format)
-
-'''set_date need detected Y = Year, m = Mounth, d = Day, S = sec, M = minutes, H = Hours'''
 def set_date(Date):
   progress(50,100,'Parsing date')
   time.sleep(0.5)
@@ -111,8 +101,6 @@ def set_date(Date):
       full_date = True
       Date_pattern[num] = '%S'
     num = num+1
-
-
 def last_backup(DIR,file_names,Format,file=False):
     progress(75,100,'Checking file names')
     time.sleep(0.5)
@@ -125,7 +113,6 @@ def last_backup(DIR,file_names,Format,file=False):
         for x in file_names:
           for y in Format:
              for File in glob.glob(DIR+x+"*"+"."+y): 
-              ''' Add DIR in GLOB'''
               find_date(File,full_date)
     elif file==False:
         progress(99,100,'Finding last backup')
