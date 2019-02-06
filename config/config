@@ -1,7 +1,7 @@
 [SETTINGS]
 Log = Logs/
 DIR = backups/
-Predeclared_Files = yes
+Predeclared_Files = no
 Format = dat,backup,rar,zip,7z
 File_names = backup,nextbackup,nextnextbackup
 #Y = Year/m = Month/d = Day/H = Hour/S = Second/M = Minute
