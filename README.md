@@ -12,4 +12,4 @@
   * Manual start `py main.py`
   * Automatic start: https://opensource.com/article/17/11/how-use-cron-linux
   
-  ![DEPRESIVE KATZEN](https://media.giphy.com/media/13HgwGsXF0aiGY/giphy.gif)
+  ![alt text](https://gph.is/1vOCl8h "DEPRESIVE KATZEN")
