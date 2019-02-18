@@ -5,6 +5,7 @@
 * Requirements
   * Python 3
   * Config Parser 3.7.1
+  * Install: `pip install -r requirements.txt`
   
 * Install
   * Download
